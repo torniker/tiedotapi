@@ -1,4 +1,4 @@
-package tiedot
+package tiedotapi
 
 import (
 	"bytes"
@@ -6,6 +6,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
@@ -36,12 +37,24 @@ type TD struct {
 // NewTD return TD context
 func NewTD() TD {
 	if ctx == nil {
+		port, err := strconv.Atoi(getEnv("TIEDOT_PORT", "5830"))
+		if err != nil {
+			port = 5830
+		}
 		ctx = &TD{
-			URL:  "http://localhost",
-			Port: 5830,
+			URL:  getEnv("TIEDOT_URL", "http://localhost"),
+			Port: port,
 		}
 	}
 	return *ctx
+}
+
+func getEnv(name, def string) string {
+	env := os.Getenv(name)
+	if env == "" {
+		env = def
+	}
+	return env
 }
 
 func (td TD) String() string {
