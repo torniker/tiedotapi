@@ -9,8 +9,6 @@ import (
 	"os"
 	"strconv"
 	"time"
-
-	"github.com/murlokswarm/log"
 )
 
 // Model interface for using tiedot
@@ -42,7 +40,7 @@ func NewTD() TD {
 			port = 5830
 		}
 		ctx = &TD{
-			URL:  getEnv("TIEDOT_URL", "http://localhost"),
+			URL:  getEnv("TIEDOT_URL", "http://mydoc.ge"),
 			Port: port,
 		}
 	}
@@ -112,7 +110,6 @@ func (td TD) Insert(obj Model) error {
 	q.Add("col", obj.CollactionName())
 	// q.Add("doc", newObj.String())
 	req.URL.RawQuery = q.Encode()
-	log.Infof("TieDot Insert Request: %v", req)
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
@@ -173,7 +170,6 @@ func (td TD) Delete(obj Model, id string) error {
 	q.Add("col", obj.CollactionName())
 	q.Add("id", id)
 	req.URL.RawQuery = q.Encode()
-	log.Infof("TieDot Delete Request: %v", req)
 	client := &http.Client{}
 	_, err = client.Do(req)
 	if err != nil {
