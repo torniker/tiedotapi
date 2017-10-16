@@ -40,7 +40,7 @@ func NewTD() TD {
 			port = 5830
 		}
 		ctx = &TD{
-			URL:  getEnv("TIEDOT_URL", "http://mydoc.ge"),
+			URL:  getEnv("TIEDOT_URL", "http://localhost"),
 			Port: port,
 		}
 	}
