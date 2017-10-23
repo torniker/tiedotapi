@@ -20,8 +20,9 @@ type Model interface {
 
 // Query tiedot query object
 type Query struct {
-	Eq string   `json:"eq"`
-	In []string `json:"in"`
+	Eq    string   `json:"eq"`
+	In    []string `json:"in"`
+	Limit int      `json:"limit"`
 }
 
 var ctx *TD
