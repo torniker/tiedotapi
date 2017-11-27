@@ -75,6 +75,20 @@ func (td TD) GetPage(obj Model, page, total int) (*http.Response, error) {
 	return client.Do(req)
 }
 
+// Get by ID
+func (td TD) Get(obj Model, id string) (*http.Response, error) {
+	req, err := http.NewRequest("GET", td.String()+"get", nil)
+	if err != nil {
+		return nil, err
+	}
+	q := req.URL.Query()
+	q.Add("col", obj.CollactionName())
+	q.Add("id", id)
+	req.URL.RawQuery = q.Encode()
+	client := &http.Client{}
+	return client.Do(req)
+}
+
 // Query tiedot collection
 func (td TD) Query(obj Model, query Query) (*http.Response, error) {
 	req, err := http.NewRequest("GET", td.String()+"query", nil)
@@ -96,16 +110,16 @@ func (td TD) Query(obj Model, query Query) (*http.Response, error) {
 }
 
 // Insert inserts given object
-func (td TD) Insert(obj Model) error {
+func (td TD) Insert(obj Model) (*int, error) {
 	newObj := new(bytes.Buffer)
 	obj.SetCreatedAt(time.Now())
 	err := json.NewEncoder(newObj).Encode(obj)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	req, err := http.NewRequest("POST", td.String()+"insert", newObj)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	q := req.URL.Query()
 	q.Add("col", obj.CollactionName())
@@ -114,18 +128,21 @@ func (td TD) Insert(obj Model) error {
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer res.Body.Close()
 	bodyBytes, _ := ioutil.ReadAll(res.Body)
 	bodyStr := string(bodyBytes)
 	if res.StatusCode != 201 {
-		return errors.New(bodyStr)
+		return nil, errors.New(bodyStr)
 	}
-	// id := bodyStr
+	id, err := strconv.Atoi(bodyStr)
+	if err != nil {
+		return nil, err
+	}
 	// obj.SetID(id)
 	// td.Update(obj, id)
-	return nil
+	return &id, nil
 }
 
 // Update updates given object
