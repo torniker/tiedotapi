@@ -66,6 +66,7 @@ func (td TD) GetPage(obj Model, page, total int) (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
+	req.Close = true
 	q := req.URL.Query()
 	q.Add("col", obj.CollactionName())
 	q.Add("page", strconv.Itoa(page))
@@ -81,6 +82,7 @@ func (td TD) Get(obj Model, id string) (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
+	req.Close = true
 	q := req.URL.Query()
 	q.Add("col", obj.CollactionName())
 	q.Add("id", id)
@@ -95,6 +97,7 @@ func (td TD) Query(obj Model, query Query) (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
+	req.Close = true
 	newObj := new(bytes.Buffer)
 	err = json.NewEncoder(newObj).Encode(query)
 	if err != nil {
@@ -121,6 +124,7 @@ func (td TD) Insert(obj Model) (*int, error) {
 	if err != nil {
 		return nil, err
 	}
+	req.Close = true
 	q := req.URL.Query()
 	q.Add("col", obj.CollactionName())
 	// q.Add("doc", newObj.String())
@@ -156,6 +160,7 @@ func (td TD) Update(obj Model, id string) error {
 	if err != nil {
 		return err
 	}
+	req.Close = true
 	q := req.URL.Query()
 	q.Add("col", obj.CollactionName())
 	q.Add("id", id)
@@ -184,6 +189,7 @@ func (td TD) Delete(obj Model, id string) error {
 	if err != nil {
 		return err
 	}
+	req.Close = true
 	q := req.URL.Query()
 	q.Add("col", obj.CollactionName())
 	q.Add("id", id)
