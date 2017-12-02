@@ -72,7 +72,9 @@ func (td TD) GetPage(obj Model, page, total int) (*http.Response, error) {
 	q.Add("page", strconv.Itoa(page))
 	q.Add("total", strconv.Itoa(total))
 	req.URL.RawQuery = q.Encode()
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: time.Second * 5,
+	}
 	return client.Do(req)
 }
 
@@ -87,7 +89,9 @@ func (td TD) Get(obj Model, id string) (*http.Response, error) {
 	q.Add("col", obj.CollactionName())
 	q.Add("id", id)
 	req.URL.RawQuery = q.Encode()
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: time.Second * 5,
+	}
 	return client.Do(req)
 }
 
@@ -108,7 +112,9 @@ func (td TD) Query(obj Model, query Query) (*http.Response, error) {
 	q.Add("col", obj.CollactionName())
 	q.Add("q", newObj.String())
 	req.URL.RawQuery = q.Encode()
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: time.Second * 5,
+	}
 	return client.Do(req)
 }
 
@@ -129,7 +135,9 @@ func (td TD) Insert(obj Model) (*int, error) {
 	q.Add("col", obj.CollactionName())
 	// q.Add("doc", newObj.String())
 	req.URL.RawQuery = q.Encode()
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: time.Second * 5,
+	}
 	res, err := client.Do(req)
 	if err != nil {
 		return nil, err
@@ -166,7 +174,9 @@ func (td TD) Update(obj Model, id string) error {
 	q.Add("id", id)
 	q.Add("doc", newObj.String())
 	req.URL.RawQuery = q.Encode()
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: time.Second * 5,
+	}
 	_, err = client.Do(req)
 	if err != nil {
 		return err
@@ -194,7 +204,9 @@ func (td TD) Delete(obj Model, id string) error {
 	q.Add("col", obj.CollactionName())
 	q.Add("id", id)
 	req.URL.RawQuery = q.Encode()
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: time.Second * 5,
+	}
 	_, err = client.Do(req)
 	if err != nil {
 		return err
